@@ -1,0 +1,14 @@
+{
+  "name": "root",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@types/pg": "^8.6.1",
+    "lerna": "^4.0.0"
+  },
+  "dependencies": {
+    "pg": "^8.7.1"
+  }
+}

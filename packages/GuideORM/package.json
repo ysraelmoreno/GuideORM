@@ -1,0 +1,9 @@
+{
+  "name": "GuideORM",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "peerDependencies": {
+    "pg": "^8.7.1"
+  }
+}
