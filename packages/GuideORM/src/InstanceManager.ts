@@ -1,15 +1,12 @@
 class InstanceManager {
-  protected _instances: { [key: string]: any } = {};
+  protected _instances: { [key: string]: any }[] = [];
 
   constructor() {
-    this._instances = {};
+    this._instances = [];
   }
 
   setInstance(name: string, instance: any) {
-    this._instances = {
-      ...this._instances,
-      [name]: instance,
-    };
+    this._instances.push({ [name]: instance });
   }
 
   getInstance(name: string) {

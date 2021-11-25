@@ -1,6 +1,7 @@
 import { Client as PostgresClient } from "pg";
 import { IDriverConfig } from "../types/IDriver";
 
+import DriverFactory from "./Factory";
 class Driver {
   protected name: string;
   protected host: string;
@@ -35,7 +36,7 @@ class Driver {
   }
 
   protected createDriverInstance(): PostgresClient {
-    this.databaseDriver = this.getDriver({
+    this.databaseDriver = DriverFactory.getDriver({
       host: this.host,
       port: this.port,
       user: this.user,
@@ -48,15 +49,6 @@ class Driver {
     this.databaseDriver.connect();
 
     return this.databaseDriver;
-  }
-
-  protected getDriver(config: IDriverConfig): PostgresClient {
-    switch (config.type) {
-      case "postgres":
-        return new PostgresClient(config);
-      default:
-        return new PostgresClient(config);
-    }
   }
 }
 

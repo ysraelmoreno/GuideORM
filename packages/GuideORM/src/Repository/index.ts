@@ -10,11 +10,24 @@ import GenericRepo from "./GenericRepo";
 
 class Repository<T> extends GenericRepo implements IRepository<T> {
   protected table: string;
-  protected connectionInstance = InstanceManager.getInstance("default");
+  protected connectionInstance: any;
 
   constructor(table: string) {
     super();
     this.table = table;
+
+    this.attachInstanceVerifier();
+  }
+
+  attachInstanceVerifier() {
+    const interval = setInterval(() => {
+      if (!this.connectionInstance) {
+        this.connectionInstance = InstanceManager.getInstance("default");
+        return;
+      } else {
+        clearInterval(interval);
+      }
+    }, 500);
   }
 
   public async filter({ where, select }: IFilter): Promise<T[]> {
@@ -45,6 +58,8 @@ class Repository<T> extends GenericRepo implements IRepository<T> {
       `SELECT ${select} FROM ${this.table} ${canShowJoinString} WHERE ${whereString}`,
       [...Object.values(where)]
     );
+
+    console.log(row);
 
     return row;
   }

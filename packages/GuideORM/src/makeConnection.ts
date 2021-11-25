@@ -21,8 +21,6 @@ function makeConnection({
     name,
   });
 
-  InstanceManager.setInstance(name, driver);
-
   return driver;
 }
 
