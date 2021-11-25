@@ -1,3 +1,4 @@
+import Connection from "../Connection";
 import { GenericObject } from "../types/IGenericRepo";
 
 abstract class GenericRepo {

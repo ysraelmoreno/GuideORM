@@ -1,5 +1,6 @@
 import Driver from "./Driver";
 import { IDriverConfig } from "./types/IDriver";
+import InstanceManager from "./InstanceManager";
 
 function makeConnection({
   host,
@@ -10,7 +11,7 @@ function makeConnection({
   type,
   name,
 }: IDriverConfig) {
-  return new Driver({
+  const driver = new Driver({
     host,
     port,
     user,
@@ -19,6 +20,10 @@ function makeConnection({
     type,
     name,
   });
+
+  InstanceManager.setInstance(name, driver);
+
+  return driver;
 }
 
 export default makeConnection;

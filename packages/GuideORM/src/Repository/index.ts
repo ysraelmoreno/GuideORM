@@ -1,3 +1,4 @@
+import InstanceManager from "../InstanceManager";
 import {
   IFilter,
   IFind,
@@ -9,6 +10,7 @@ import GenericRepo from "./GenericRepo";
 
 class Repository<T> extends GenericRepo implements IRepository<T> {
   protected table: string;
+  protected connectionInstance = InstanceManager.getInstance("default");
 
   constructor(table: string) {
     super();
@@ -18,7 +20,7 @@ class Repository<T> extends GenericRepo implements IRepository<T> {
   public async filter({ where, select }: IFilter): Promise<T[]> {
     const whereString = this.constructWhereString(where);
 
-    const rows: T[] = await query(
+    const rows: T[] = await this.connectionInstance.query(
       `SELECT ${select} FROM ${this.table} WHERE ${whereString}`,
       [...Object.values(where)]
     );
@@ -39,7 +41,7 @@ class Repository<T> extends GenericRepo implements IRepository<T> {
         ? `JOIN ${joins.table} ON ${joins.table}.${joinString}`
         : "";
 
-    const [row] = await query(
+    const [row] = await this.connectionInstance.query(
       `SELECT ${select} FROM ${this.table} ${canShowJoinString} WHERE ${whereString}`,
       [...Object.values(where)]
     );
@@ -48,7 +50,7 @@ class Repository<T> extends GenericRepo implements IRepository<T> {
   }
 
   public async find({ options = { orderBy: "ASC" } }: IFind): Promise<T[]> {
-    const rows: T[] = await query(
+    const rows: T[] = await this.connectionInstance.query(
       `SELECT * FROM ${this.table} ORDER BY ${options?.orderBy}`
     );
 
@@ -64,7 +66,7 @@ class Repository<T> extends GenericRepo implements IRepository<T> {
       where
     );
 
-    const [row] = await query(
+    const [row] = await this.connectionInstance.query(
       `UPDATE ${this.table} SET ${updateString} WHERE ${whereString} RETURNING *`,
       [...Object.values(values), ...Object.values(where)]
     );
@@ -76,7 +78,7 @@ class Repository<T> extends GenericRepo implements IRepository<T> {
     const [insertIntoString, variablesToAttach] =
       this.constructInsertString(values);
 
-    const [row] = await query(
+    const [row] = await this.connectionInstance.query(
       `INSERT INTO ${this.table} (${insertIntoString}) VALUES (${variablesToAttach}) RETURNING *`,
       [...Object.values(values)]
     );
